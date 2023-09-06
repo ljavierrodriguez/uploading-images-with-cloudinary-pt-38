@@ -1,11 +1,12 @@
 import os
+import cloudinary
 from flask import Flask, request, jsonify
 from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
 from dotenv import load_dotenv
-from .models import db
-from .routes.main import api 
+from models import db
+from routes.main import api 
 
 load_dotenv()
 
@@ -20,6 +21,12 @@ db.init_app(app)
 Migrate(app, db)
 jwt = JWTManager(app)
 CORS(app)
+
+cloudinary.config(
+    cloud_name=os.getenv('CLOUDINARY_CLOUD_NAME'),
+    api_key=os.getenv('CLOUDINARY_API_KEY'),
+    api_secret=os.getenv('CLOUDINARY_API_SECRET')
+)
 
 app.register_blueprint(api)
 
